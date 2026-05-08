@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#080c14">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ReWire">
+<meta name="description" content="90-Day Sexual Health Recovery Dashboard">
+<title>ReWire — 90-Day Recovery Protocol</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- INSTALL BANNER -->
+<div id="install-banner">
+  <div class="install-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+    </svg>
+  </div>
+  <div class="install-text">
+    <h4>Install ReWire</h4>
+    <p id="install-message">Add to home screen for full app experience</p>
+  </div>
+  <button class="install-btn" id="install-btn" type="button">Install</button>
+  <button class="install-dismiss" id="dismiss-btn" type="button" aria-label="Dismiss install banner">✕</button>
+</div>
+
+<!-- TOAST -->
+<div id="toast">✓ Progress saved!</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+        <polyline points="17 6 23 6 23 12"/>
+      </svg>
+    </div>
+    <div class="logo-text">Re<span>Wire</span></div>
+  </div>
+  <div class="header-right">
+    <div class="day-badge" id="day-badge">Day 1</div>
+    <div class="streak-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <span id="streak-display">0</span>
+    </div>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="showPage('dashboard')">Dashboard</button>
+  <button class="nav-tab" onclick="showPage('tracker')">Daily Log</button>
+  <button class="nav-tab" onclick="showPage('phases')">90-Day Plan</button>
+  <button class="nav-tab" onclick="showPage('protocol')">Protocol</button>
+  <button class="nav-tab" onclick="showPage('milestones')">Milestones</button>
+  <button class="nav-tab" onclick="showPage('science')">Science</button>
+  <button class="nav-tab" onclick="showPage('alerts')">Red Flags</button>
+</nav>
+
+<!-- ════════════════════════════════════════ PAGE: DASHBOARD ═══ -->
+<div class="page active" id="page-dashboard">
+
+  <!-- HERO SCORE -->
+  <div style="display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap;">
+    <div class="card card-glow" style="flex:1;min-width:200px;">
+      <div class="card-title"><span class="dot"></span>Recovery Score</div>
+      <div class="ring-wrap">
+        <div class="score-circle" style="width:110px;max-width:110px;">
+          <svg viewBox="0 0 110 110">
+            <circle cx="55" cy="55" r="48" fill="none" stroke="#121929" stroke-width="10"/>
+            <circle cx="55" cy="55" r="48" fill="none" stroke="url(#scoreGrad)" stroke-width="10"
+              stroke-dasharray="301.6" stroke-dashoffset="271.4" stroke-linecap="round" id="score-ring"/>
+            <defs>
+              <linearGradient id="scoreGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#0a6ef5"/>
+                <stop offset="100%" stop-color="#00d4ff"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="score-circle-inner">
+            <div class="score-num" id="total-score">10</div>
+            <div class="score-lbl">/100</div>
+          </div>
+        </div>
+        <div class="ring-info">
+          <div style="font-size:13px;color:var(--text-1);line-height:1.6;">
+            Daily habit completion drives your score. Aim for <span style="color:var(--accent);">70+</span> per day.
+          </div>
+          <div style="margin-top:10px;">
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-2);margin-bottom:6px;">DAILY PROGRESS</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="daily-prog" style="width:10%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="flex:1;min-width:160px;">
+      <div class="card-title"><span class="dot"></span>Day Counter</div>
+      <div class="big-num" id="day-counter">1<span class="unit">/ 90</span></div>
+      <div class="big-label">days in program</div>
+      <div class="progress-wrap">
+        <div class="progress-header">
+          <span class="progress-label">Overall</span>
+          <span class="progress-val" id="prog-pct">1%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="overall-prog" style="width:1%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK METRICS -->
+  <div class="grid-3" style="margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title"><span class="dot green"></span>PMO Streak</div>
+      <div class="big-num" id="pmo-streak">0<span class="unit">d</span></div>
+      <div class="big-label">clean days</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot yellow"></span>Sleep</div>
+      <div class="big-num" id="sleep-display">—<span class="unit">h</span></div>
+      <div class="big-label">last night</div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Phase</div>
+      <div style="font-family:var(--font-display);font-weight:800;font-size:28px;letter-spacing:-1px;" id="current-phase">1</div>
+      <div class="big-label" id="phase-label">Reset</div>
+    </div>
+  </div>
+
+  <!-- TRACKER OVERVIEW -->
+  <div class="grid-2" style="margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title"><span class="dot green"></span>Morning Erection</div>
+      <div class="tracker-row" id="me-display">
+        <span style="font-size:13px;color:var(--text-2);">Log in Daily tab</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Anxiety Level</div>
+      <div style="font-family:var(--font-display);font-weight:800;font-size:32px;letter-spacing:-1px;" id="anxiety-display">—</div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:4px;font-family:var(--font-mono);">/ 10 scale</div>
+    </div>
+  </div>
+
+  <!-- CALENDAR VIEW -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot"></span>Calendar <span class="calendar-month" id="calendar-month"></span></div>
+    <div class="calendar-grid" id="calendar-grid"></div>
+    <div class="calendar-legend">
+      <div class="calendar-legend-item"><span class="calendar-key clean"></span>Clean</div>
+      <div class="calendar-legend-item"><span class="calendar-key urge"></span>Urge</div>
+      <div class="calendar-legend-item"><span class="calendar-key today"></span>Today</div>
+      <div class="calendar-legend-item"><span class="calendar-key relapse"></span>Relapse</div>
+    </div>
+  </div>
+
+  <!-- WEEKLY INSIGHTS -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot green"></span>Weekly Insights</div>
+    <div class="insight-grid" id="weekly-insights"></div>
+  </div>
+
+  <!-- TREND SUMMARY -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot"></span>Trend Summary</div>
+    <div class="trend-list" id="trend-summary"></div>
+  </div>
+
+  <!-- LIBIDO + CONFIDENCE BARS -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot"></span>Recovery Indicators</div>
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">Libido Level</span>
+        <span class="progress-val" id="libido-pct">—%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill green" id="libido-bar" style="width:0%;"></div>
+      </div>
+    </div>
+    <div class="progress-wrap" style="margin-top:14px;">
+      <div class="progress-header">
+        <span class="progress-label">Partner Confidence</span>
+        <span class="progress-val" id="conf-pct">—%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill yellow" id="conf-bar" style="width:0%;"></div>
+      </div>
+    </div>
+    <div class="progress-wrap" style="margin-top:14px;">
+      <div class="progress-header">
+        <span class="progress-label">Anxiety Control (higher = better)</span>
+        <span class="progress-val" id="anx-pct">—%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="anx-bar" style="width:0%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKUP DATA -->
+  <!-- PROGRESS CHART -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot"></span>Progress Chart <span class="calendar-month">Last 30 days</span></div>
+    <div class="chart-tabs">
+      <button class="chart-tab active" type="button" onclick="setChartMetric('score')">Score</button>
+      <button class="chart-tab" type="button" onclick="setChartMetric('sleep')">Sleep</button>
+      <button class="chart-tab" type="button" onclick="setChartMetric('anxiety')">Anxiety</button>
+      <button class="chart-tab" type="button" onclick="setChartMetric('libido')">Libido</button>
+      <button class="chart-tab" type="button" onclick="setChartMetric('conf')">Confidence</button>
+    </div>
+    <canvas id="progress-chart" width="800" height="280"></canvas>
+  </div>
+
+  <!-- REMINDER -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot yellow"></span>Notification Reminder</div>
+    <div class="reminder-row">
+      <input type="time" id="reminder-time" value="21:00" onchange="updateReminderTime(this.value)">
+      <button class="utility-btn" type="button" id="reminder-btn" onclick="toggleReminder()">Enable Reminder</button>
+    </div>
+    <div class="backup-note" id="reminder-status">Reminder is off. Works while the PWA/browser is active; Android may pause local timers when fully closed.</div>
+  </div>
+
+  <!-- MONTHLY REPORT -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot green"></span>Monthly Report <span class="calendar-month" id="monthly-report-label"></span></div>
+    <div class="insight-grid" id="monthly-report"></div>
+  </div>
+
+  <!-- PROGRAM SETTINGS -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot red"></span>Program Settings</div>
+    <div class="reminder-row">
+      <input type="date" id="start-date-input" onchange="updateStartDate(this.value)">
+      <button class="utility-btn secondary" type="button" onclick="resetProgram()">Reset Program</button>
+    </div>
+    <div class="backup-note">Changing the start date updates the day counter and phase. Reset clears logs and milestones after confirmation.</div>
+  </div>
+
+  <!-- BACKUP DATA -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot"></span>Backup Data</div>
+    <div class="backup-actions">
+      <button class="utility-btn" type="button" onclick="exportData()">Export JSON</button>
+      <button class="utility-btn secondary" type="button" onclick="document.getElementById('backup-import').click()">Import JSON</button>
+      <input id="backup-import" type="file" accept="application/json,.json" onchange="importData(event)" hidden>
+    </div>
+    <div class="backup-note">Use this before clearing browser data, reinstalling the PWA, or moving to another device.</div>
+  </div>
+
+</div><!-- /page-dashboard -->
+
+<!-- ════════════════════════════════════════ PAGE: DAILY LOG ═══ -->
+<div class="page" id="page-tracker">
+  <div class="section-header">
+    <div class="section-title">Daily <span>Log</span></div>
+    <div class="section-sub">Track today's habits — every point counts</div>
+  </div>
+
+  <!-- HABIT CHECKLIST -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot green"></span>Daily Habits <span style="margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--accent);" id="habit-score-display">0 pts</span></div>
+    <div class="habit-list" id="habit-list"></div>
+  </div>
+
+  <!-- MORNING ERECTION -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot green"></span>Morning Erection Quality</div>
+    <div class="tracker-row" id="me-tracker">
+      <button class="tracker-btn" onclick="setME('none')">None</button>
+      <button class="tracker-btn" onclick="setME('partial')">Partial</button>
+      <button class="tracker-btn" onclick="setME('moderate')">Moderate</button>
+      <button class="tracker-btn active green" onclick="setME('strong')">Strong</button>
+      <button class="tracker-btn" onclick="setME('full')">Full</button>
+    </div>
+    <div style="font-size:11px;color:var(--text-2);margin-top:8px;font-family:var(--font-mono);">Morning wood = neurological recovery signal ✓</div>
+  </div>
+
+  <!-- PMO STATUS -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot red"></span>PMO Status Today</div>
+    <div class="tracker-row" id="pmo-tracker">
+      <button class="tracker-btn active green" onclick="setPMO('clean')">✓ Clean</button>
+      <button class="tracker-btn" onclick="setPMO('urge')">Had Urge</button>
+      <button class="tracker-btn" onclick="setPMO('relapse')">Relapse</button>
+    </div>
+  </div>
+
+  <!-- EMERGENCY MODE -->
+  <div class="card emergency-card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot red"></span>Emergency Mode</div>
+    <div class="backup-note" style="margin-top:0;margin-bottom:12px;">Use this when an urge spikes. It starts a 10-minute reset with quick actions.</div>
+    <button class="utility-btn full" type="button" onclick="startEmergencyMode()">Start Emergency Mode</button>
+  </div>
+
+  <!-- STREAK PROTECTION -->
+  <div class="card action-panel" id="protection-panel" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot yellow"></span>Streak Protection Plan</div>
+    <div class="protection-grid" id="protection-list"></div>
+  </div>
+
+  <!-- RELAPSE ANALYSIS -->
+  <div class="card action-panel" id="relapse-panel" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot red"></span>Relapse Analysis</div>
+    <div class="form-grid">
+      <label class="form-field">Trigger
+        <select id="relapse-trigger" onchange="updateRelapseAnalysis('trigger', this.value)">
+          <option value="">Select trigger</option>
+          <option>Stress</option>
+          <option>Boredom</option>
+          <option>Loneliness</option>
+          <option>Social media</option>
+          <option>Night scrolling</option>
+          <option>Conflict</option>
+          <option>Other</option>
+        </select>
+      </label>
+      <label class="form-field">Emotion
+        <select id="relapse-emotion" onchange="updateRelapseAnalysis('emotion', this.value)">
+          <option value="">Select emotion</option>
+          <option>Anxious</option>
+          <option>Angry</option>
+          <option>Sad</option>
+          <option>Numb</option>
+          <option>Excited</option>
+          <option>Tired</option>
+        </select>
+      </label>
+    </div>
+    <label class="form-field">Prevention for next time
+      <textarea id="relapse-prevention" rows="3" placeholder="What will you do differently next time?" oninput="updateRelapseAnalysis('prevention', this.value)"></textarea>
+    </label>
+  </div>
+
+  <!-- MASTURBATION -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot yellow"></span>Masturbation (No Porn)</div>
+    <div style="font-size:12px;color:var(--text-1);margin-bottom:10px;">Protocol: 0 in Phase 1 / Max 1× per week in Phase 2+, using START-STOP technique only</div>
+    <div class="tracker-row" id="mast-tracker">
+      <button class="tracker-btn active green" onclick="setMast(0)">0× today</button>
+      <button class="tracker-btn" onclick="setMast(1)">1× (start-stop)</button>
+      <button class="tracker-btn" onclick="setMast(2)">2×</button>
+    </div>
+  </div>
+
+  <!-- SLEEP -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot"></span>Sleep Last Night</div>
+    <div class="slider-wrap">
+      <input type="range" min="3" max="10" step="0.5" value="7" id="sleep-slider" oninput="updateSleep(this.value)">
+      <div class="slider-labels">
+        <span class="slider-label">3h</span>
+        <span class="slider-label" id="sleep-val">7.0h</span>
+        <span class="slider-label">10h</span>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--text-2);margin-top:8px;font-family:var(--font-mono);">Target: 7–9h • Testosterone peaks at 8h sleep</div>
+  </div>
+
+  <!-- ANXIETY -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot red"></span>Performance Anxiety</div>
+    <div class="slider-wrap">
+      <input type="range" min="0" max="10" step="1" value="5" id="anxiety-slider" oninput="updateAnxiety(this.value)">
+      <div class="slider-labels">
+        <span class="slider-label">0 calm</span>
+        <span class="slider-label" id="anxiety-val">5</span>
+        <span class="slider-label">10 panic</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIBIDO -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot green"></span>Libido Level</div>
+    <div class="slider-wrap">
+      <input type="range" min="0" max="10" step="1" value="3" id="libido-slider" oninput="updateLibido(this.value)">
+      <div class="slider-labels">
+        <span class="slider-label">0 none</span>
+        <span class="slider-label" id="libido-val">3</span>
+        <span class="slider-label">10 high</span>
+      </div>
+    </div>
+  </div>
+
+    <!-- BREATHING -->
+  <div class="card" style="margin-bottom:14px;text-align:center;">
+    <div class="card-title" style="justify-content:center;"><span class="dot"></span>Box Breathing Exercise</div>
+    <div class="breath-circle" id="breath-circle">Breathe</div>
+    <div class="breath-label" id="breath-label">Inhale 4s → Hold 4s → Exhale 4s → Hold 4s</div>
+    <button onclick="startBreathing()" style="margin-top:14px;background:var(--accent-dim);border:1px solid var(--border-active);color:var(--accent);padding:10px 24px;border-radius:10px;font-family:var(--font-display);font-weight:700;font-size:13px;cursor:pointer;">Start 2-min Session</button>
+  </div>
+
+  <!-- SAVE BUTTON -->
+  <button class="save-btn" onclick="saveDay()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+      <polyline points="17 21 17 13 7 13 7 21"/>
+    </svg>
+    Save Today's Log
+  </button>
+</div><!-- /page-tracker -->
+
+<!-- ════════════════════════════════════════ PAGE: 90-DAY PHASES ═══ -->
+<div class="page" id="page-phases">
+  <div class="section-header">
+    <div class="section-title">90-Day <span>Recovery Plan</span></div>
+    <div class="section-sub">Three phases — systematic, science-backed recovery</div>
+  </div>
+
+  <div class="stack">
+    <!-- PHASE 1 -->
+    <div class="phase-card">
+      <div class="phase-num">PHASE 01 / DAYS 1–30</div>
+      <div class="phase-title">RESET</div>
+      <div class="phase-range">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Days 1 – 30
+      </div>
+      <div class="phase-goals">
+        <div class="phase-goal">Complete abstinence from pornography — zero exceptions. This resets dopamine receptor sensitivity.</div>
+        <div class="phase-goal">No masturbation in first 30 days. Allow neurological "flatline" — this is normal and expected.</div>
+        <div class="phase-goal">Daily exercise (30 min minimum): boosts testosterone, dopamine, serotonin naturally.</div>
+        <div class="phase-goal">Sleep 7.5–9 hours. Testosterone is produced during deep sleep — non-negotiable.</div>
+        <div class="phase-goal">Box breathing daily: 4-4-4-4 pattern, 2 minutes minimum. Lowers cortisol baseline.</div>
+        <div class="phase-goal">Cold shower 60 seconds every morning: dopamine reset, discipline training.</div>
+        <div class="phase-goal">Begin journaling: track urges, thoughts, emotional states without judgment.</div>
+        <div class="phase-goal">Avoid sexual content, suggestive media, explicit images of any kind.</div>
+        <div class="phase-goal">Prioritize platonic physical touch: hugging, non-sexual massage, being around partner casually.</div>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="tag blue">Dopamine Reset</span>
+        <span class="tag blue">Flatline Expected</span>
+        <span class="tag">Testosterone Boost</span>
+        <span class="tag">Nervous System</span>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase-card phase2">
+      <div class="phase-num">PHASE 02 / DAYS 31–60</div>
+      <div class="phase-title">REWIRING</div>
+      <div class="phase-range" style="border-color:rgba(124,92,252,0.4);color:var(--accent3);background:rgba(124,92,252,0.1);">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Days 31 – 60
+      </div>
+      <div class="phase-goals">
+        <div class="phase-goal">Continue zero porn. Begin controlled solo stimulation maximum 1× per week — NO fantasy about porn scenes.</div>
+        <div class="phase-goal">Sensate focus exercises with partner: touch without performance goals, remove erection pressure entirely.</div>
+        <div class="phase-goal">Begin start-stop technique: stimulate to ~70% arousal, stop, wait, repeat 3–4 cycles.</div>
+        <div class="phase-goal">Conscious breathing during arousal — connect breath to sensation, not to performance.</div>
+        <div class="phase-goal">Non-penetrative intimacy with partner: create arousal through real human connection.</div>
+        <div class="phase-goal">Practice mindfulness during sexual thoughts — observe without engaging or suppressing.</div>
+        <div class="phase-goal">Kegel exercises: 3 sets × 10 reps daily — strengthen pelvic floor for ejaculation control.</div>
+        <div class="phase-goal">Increase protein, zinc (oysters, pumpkin seeds), vitamin D. These support testosterone directly.</div>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="tag" style="background:rgba(124,92,252,0.1);color:var(--accent3);border-color:rgba(124,92,252,0.3);">Neural Rewiring</span>
+        <span class="tag" style="background:rgba(124,92,252,0.1);color:var(--accent3);border-color:rgba(124,92,252,0.3);">Sensate Focus</span>
+        <span class="tag">Start-Stop</span>
+        <span class="tag">Kegels</span>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase-card phase3">
+      <div class="phase-num">PHASE 03 / DAYS 61–90</div>
+      <div class="phase-title">PERFORMANCE RECOVERY</div>
+      <div class="phase-range" style="border-color:rgba(0,224,150,0.4);color:var(--success);background:rgba(0,224,150,0.08);">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Days 61 – 90
+      </div>
+      <div class="phase-goals">
+        <div class="phase-goal">Gradual penetration attempts — only when erection is 80%+ strong. No "testing" attempts.</div>
+        <div class="phase-goal">Use squeeze technique for ejaculation control: squeeze glans for 10–20 seconds at 70% arousal plateau.</div>
+        <div class="phase-goal">Communicate openly with partner: remove time pressure, create zero-expectation intimacy.</div>
+        <div class="phase-goal">If erection is lost — it is not failure. Continue with touch, return when ready. This is practice, not performance.</div>
+        <div class="phase-goal">Shift focus to partner's pleasure: less self-monitoring, more connection.</div>
+        <div class="phase-goal">Journaling: document progress, note patterns, celebrate wins regardless of size.</div>
+        <div class="phase-goal">Continue exercise, sleep, nutrition — these are permanent lifestyle changes, not temporary fixes.</div>
+        <div class="phase-goal">If persistent difficulty remains after Day 90, consult a urologist or sex therapist — not a failure, just data.</div>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;">
+        <span class="tag green">Penetration Readiness</span>
+        <span class="tag green">Squeeze Technique</span>
+        <span class="tag">Communication</span>
+        <span class="tag">Zero Pressure</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-phases -->
+
+<!-- ════════════════════════════════════════ PAGE: PROTOCOL ═══ -->
+<div class="page" id="page-protocol">
+  <div class="section-header">
+    <div class="section-title">Daily <span>Action Protocol</span></div>
+    <div class="section-sub">Your complete daily action system</div>
+  </div>
+
+  <!-- DAILY SCHEDULE -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot"></span>Daily Structure</div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot done"></div>
+        <div class="timeline-phase">MORNING — 7:00 AM</div>
+        <div class="timeline-title">Rise Protocol</div>
+        <div class="timeline-body">Cold shower (60 sec). Note morning erection quality in app. Drink 500ml water. Log sleep hours.</div>
+        <div class="timeline-tags"><span class="tag blue">Dopamine</span><span class="tag">Testosterone</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot active"></div>
+        <div class="timeline-phase">MORNING — 7:30 AM</div>
+        <div class="timeline-title">Breathing & Mindset</div>
+        <div class="timeline-body">Box breathing 2 minutes (4-4-4-4). Read one affirmation. Set daily intention: "I am rewiring my brain for real connection."</div>
+        <div class="timeline-tags"><span class="tag blue">Cortisol Reduction</span><span class="tag">Mindset</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-phase">MORNING — 8:00 AM</div>
+        <div class="timeline-title">Nutrition</div>
+        <div class="timeline-body">High-protein breakfast. Zinc sources: eggs, pumpkin seeds. Avoid sugar spike. Sunlight exposure 10 minutes.</div>
+        <div class="timeline-tags"><span class="tag">Zinc</span><span class="tag">Vitamin D</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-phase">DAY — FLEXIBLE</div>
+        <div class="timeline-title">Exercise Session</div>
+        <div class="timeline-body">30–60 min: strength training preferred. Compound movements (deadlifts, squats, rows). Cardio 2× per week. Kegel sets 3×10.</div>
+        <div class="timeline-tags"><span class="tag blue">T-Boost</span><span class="tag">Pelvic Floor</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-phase">EVENING</div>
+        <div class="timeline-title">Wind Down</div>
+        <div class="timeline-body">No screens 1h before bed. Journal 5 minutes: wins, urges resisted, gratitude. Stretch 10 minutes.</div>
+        <div class="timeline-tags"><span class="tag">Melatonin</span><span class="tag green">Recovery</span></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-phase">NIGHT — 10:30 PM</div>
+        <div class="timeline-title">Sleep</div>
+        <div class="timeline-body">Lights out. Room dark and cool (18–20°C). 7.5–9 hours. Phone in another room or grayscale mode. This is when testosterone is synthesized.</div>
+        <div class="timeline-tags"><span class="tag blue">T-Synthesis</span><span class="tag green">Deep Sleep</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEXUAL REWIRING PROTOCOL -->
+  <div class="section-header" style="margin-top:24px;">
+    <div class="section-title">Sexual <span>Rewiring Protocol</span></div>
+    <div class="section-sub">Progressive desensitization and reconnection</div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot"></span>Start-Stop Training</div>
+    <div class="protocol-step">
+      <div class="step-num">01</div>
+      <div class="step-content">
+        <div class="step-title">Solo practice (no porn)</div>
+        <div class="step-body">Stimulate manually to 60–70% arousal. STOP completely. Breathe. Wait for arousal to drop to 30%. Repeat 3–4 cycles before allowing ejaculation.</div>
+        <div class="step-week">Begin Week 5</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">02</div>
+      <div class="step-content">
+        <div class="step-title">Partner hand stimulation</div>
+        <div class="step-body">Same cycle — partner stimulates, you signal to stop. No penetration pressure. Erection maintenance is the only goal. If lost, it is not failure.</div>
+        <div class="step-week">Begin Week 7</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">03</div>
+      <div class="step-content">
+        <div class="step-title">Penetration without movement</div>
+        <div class="step-body">If erection is strong (≥80%), gentle penetration. Stay still. Focus on sensation, not performance. No thrusting for first 2 sessions. Just presence.</div>
+        <div class="step-week">Begin Week 9</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">04</div>
+      <div class="step-content">
+        <div class="step-title">Squeeze technique for EJ control</div>
+        <div class="step-body">At point of no return minus 10 seconds, squeeze firmly just below glans for 20 seconds. Release. Continue. Practice this 2–3 cycles per session.</div>
+        <div class="step-week">Begin Week 9</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SENSATE FOCUS -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot yellow"></span>Sensate Focus Program</div>
+    <div style="font-size:13px;color:var(--text-1);line-height:1.7;margin-bottom:14px;">
+      Developed by Masters & Johnson. Removes performance pressure by making touch the entire goal — not erection, not orgasm.
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">S1</div>
+      <div class="step-content">
+        <div class="step-title">Non-genital touch</div>
+        <div class="step-body">Partner touches your body (excluding genitals). Your only job: feel and describe the sensation. No sexual goals. 15–20 minutes per session.</div>
+        <div class="step-week">Weeks 5–6</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">S2</div>
+      <div class="step-content">
+        <div class="step-title">Genital touch without intercourse</div>
+        <div class="step-body">Include genitals in touch. Erection is welcome but NOT the goal. No intercourse permitted. Stay in observation mode — what feels good, what triggers anxiety.</div>
+        <div class="step-week">Weeks 7–8</div>
+      </div>
+    </div>
+    <div class="protocol-step">
+      <div class="step-num">S3</div>
+      <div class="step-content">
+        <div class="step-title">Mutual pleasure focus</div>
+        <div class="step-body">Shift attention to partner's pleasure during your own arousal. This breaks self-monitoring loop (spectatoring) that kills erections.</div>
+        <div class="step-week">Weeks 9–12</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERFORMANCE PRESSURE REMOVAL -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot green"></span>Performance Pressure Removal Rules</div>
+    <div class="metric-row"><div class="metric-name">Erection not required for intimacy</div><div class="metric-value good">Rule 1</div></div>
+    <div class="metric-row"><div class="metric-name">No "testing" yourself with partner</div><div class="metric-value good">Rule 2</div></div>
+    <div class="metric-row"><div class="metric-name">Penetration only if erection ≥ 80%</div><div class="metric-value good">Rule 3</div></div>
+    <div class="metric-row"><div class="metric-name">Lost erection = take a break, not game over</div><div class="metric-value good">Rule 4</div></div>
+    <div class="metric-row"><div class="metric-name">No porn fantasy during sex — stay present</div><div class="metric-value good">Rule 5</div></div>
+    <div class="metric-row"><div class="metric-name">Communicate openly with partner</div><div class="metric-value good">Rule 6</div></div>
+    <div class="metric-row"><div class="metric-name">Progress = any improvement, not perfection</div><div class="metric-value good">Rule 7</div></div>
+  </div>
+
+</div><!-- /page-protocol -->
+
+<!-- ════════════════════════════════════════ PAGE: MILESTONES ═══ -->
+<div class="page" id="page-milestones">
+  <div class="section-header">
+    <div class="section-title">Weekly <span>Milestones</span></div>
+    <div class="section-sub">Checkpoints to track real neurological progress</div>
+  </div>
+
+  <div id="milestone-list"></div>
+</div>
+
+<!-- ════════════════════════════════════════ PAGE: SCIENCE ═══ -->
+<div class="page" id="page-science">
+  <div class="section-header">
+    <div class="section-title">The <span>Science</span></div>
+    <div class="section-sub">Why recovery is certain — the neurology explained</div>
+  </div>
+
+  <div class="card card-accent" style="margin-bottom:14px;">
+    <div class="card-title"><span class="dot green"></span>Key Insight</div>
+    <div style="font-family:var(--font-display);font-weight:700;font-size:16px;line-height:1.5;color:var(--text-0);margin-bottom:8px;">
+      "You can achieve full erection alone. This means your vascular system is 100% functional. The problem is in your brain — and brains are highly plastic."
+    </div>
+    <div style="font-size:13px;color:var(--text-1);">This is the most important fact. Organic ED involves blood flow problems (diabetes, hypertension, atherosclerosis). You have none of these. Your hardware works perfectly.</div>
+  </div>
+
+  <div class="science-item">
+    <div class="science-title">
+      <div class="sci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v11M9 14H5a2 2 0 00-2-2V6a2 2 0 012-2m4 10h10a2 2 0 002-2V6a2 2 0 00-2-2"/></svg></div>
+      Dopamine Receptor Downregulation
+    </div>
+    <div class="science-body">15 years of high-stimulation porn has desensitized your dopamine reward system. The brain reduced D2 receptor density to compensate for chronic overstimulation. Real human partners — with normal stimulus levels — cannot compete, triggering underarousal. Abstinence for 30–90 days causes receptor density to return to baseline (confirmed in multiple neuroimaging studies on addiction recovery).</div>
+  </div>
+
+  <div class="science-item">
+    <div class="science-title">
+      <div class="sci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+      Situational ED is Conditioned Response
+    </div>
+    <div class="science-body">Your brain has formed a conditioned arousal circuit that activates specifically with screen-based stimulation (visual novelty, dopamine-spike video switching). This circuit does NOT activate with a real partner in the same way — hence strong erections alone, weak with partner. This is a Pavlovian conditioning issue, not anatomy. New conditioning pathways can be formed in 60–90 days with consistent rewiring.</div>
+  </div>
+
+  <div class="science-item">
+    <div class="science-title">
+      <div class="sci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      Performance Anxiety & The Spectatoring Loop
+    </div>
+    <div class="science-body">During intimacy, self-monitoring ("Am I hard? Will I stay hard?") activates the prefrontal cortex and triggers cortisol/adrenaline release. These stress hormones directly constrict penile blood vessels. This creates a self-fulfilling prophecy. The solution is attentional redirection to sensation and partner — which deactivates the monitoring loop and allows natural arousal to proceed.</div>
+  </div>
+
+  <div class="science-item">
+    <div class="science-title">
+      <div class="sci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      Premature Ejaculation: Arousal-Erection Decoupling
+    </div>
+    <div class="science-body">Years of rushing to ejaculate solo (often anxiously) trained your ejaculatory reflex to trigger at low arousal thresholds and before full erection develops. The pelvic floor muscle coordination is disrupted. Start-stop training and Kegel exercises directly retrain the ejaculatory reflex timing. Clinical studies show 80%+ improvement in ejaculation control within 8–12 weeks of start-stop training.</div>
+  </div>
+
+  <div class="science-item">
+    <div class="science-title">
+      <div class="sci-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      Neuroplasticity: The Recovery Engine
+    </div>
+    <div class="science-body">The brain physically rewires itself based on repeated experience. Every day without porn, every positive intimate experience, every start-stop cycle, every cold shower — these are literally building new neural pathways. At 31 with no underlying pathology, neuroplasticity is at high capacity. The brain you had at 16 before pornography is recoverable because those foundational circuits still exist — they've just been overshadowed.</div>
+  </div>
+
+  <!-- SCORING FORMULA -->
+  <div class="card" style="margin-top:6px;">
+    <div class="card-title"><span class="dot"></span>Habit Score Formula</div>
+    <div style="font-family:var(--font-mono);font-size:12px;color:var(--text-1);line-height:2;background:var(--bg-2);padding:14px;border-radius:10px;border:1px solid var(--border);">
+      <div style="color:var(--accent);">// Daily Score (max 100)</div>
+      <div>PMO Clean ............ +20 pts</div>
+      <div>Exercise done ........ +15 pts</div>
+      <div>Sleep 7–9h ........... +15 pts</div>
+      <div>Breathing done ....... +10 pts</div>
+      <div>Cold shower .......... +10 pts</div>
+      <div>Morning erection log . +5 pts</div>
+      <div>Nutrition goals ...... +10 pts</div>
+      <div>No screens 1h bed .... +10 pts</div>
+      <div>Journal entry ........ +5 pts</div>
+      <div style="color:var(--danger);">Porn relapse ......... -40 pts</div>
+      <div style="color:var(--warning);">Masturbation (limit) . -10 pts</div>
+      <div style="margin-top:8px;color:var(--success);">Target: 70+ daily / 490+ weekly</div>
+    </div>
+  </div>
+</div><!-- /page-science -->
+
+<!-- ════════════════════════════════════════ PAGE: RED FLAGS ═══ -->
+<div class="page" id="page-alerts">
+  <div class="section-header">
+    <div class="section-title">Red Flag <span>Alerts</span></div>
+    <div class="section-sub">When to escalate to a medical professional</div>
+  </div>
+
+  <div class="card card-accent" style="border-left-color:var(--success);margin-bottom:14px;">
+    <div style="font-size:13px;color:var(--text-1);line-height:1.7;">
+      <span style="color:var(--success);font-weight:700;">Good news first:</span> Your case profile (functional solo erections, no diabetes/hypertension, lean, 31 years old) is highly favorable for full self-directed recovery. Most men with this profile recover fully within 90 days. The red flags below are for monitoring only.
+    </div>
+  </div>
+
+  <div class="alert-card">
+    <div class="alert-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      No improvement after 60 days of strict protocol
+    </div>
+    <div class="alert-body">If morning erections are still consistently weak or absent after 60 days of perfect protocol adherence, schedule blood work: total testosterone, free testosterone, SHBG, LH, FSH, prolactin, thyroid panel. Hormonal deficiencies can co-exist with behavioral issues.</div>
+  </div>
+
+  <div class="alert-card">
+    <div class="alert-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Painful erections or penile curvature (Peyronie's)
+    </div>
+    <div class="alert-body">Pain during erection, noticeable curvature, or hard plaques felt under the skin — see a urologist immediately. Peyronie's disease requires separate treatment and is unrelated to this protocol.</div>
+  </div>
+
+  <div class="alert-card">
+    <div class="alert-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Complete loss of libido and morning erections
+    </div>
+    <div class="alert-body">Total absence of morning erections AND libido (not related to flatline period in days 7–21) can indicate low testosterone or other endocrine issue. Flatline is expected in weeks 2–4 — this is different. Sustained zero libido beyond day 45 = blood work required.</div>
+  </div>
+
+  <div class="alert-card">
+    <div class="alert-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Severe anxiety or depression symptoms
+    </div>
+    <div class="alert-body">The rewiring process can surface underlying anxiety disorders or depression. If anxiety becomes debilitating, if you experience panic attacks during intimacy, or if mood deteriorates significantly — a licensed psychosexual therapist (not just GP) can accelerate recovery dramatically. CBT specifically for sexual performance anxiety has 75%+ success rate.</div>
+  </div>
+
+  <div class="alert-card">
+    <div class="alert-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Multiple relapses disrupting recovery
+    </div>
+    <div class="alert-body">If you cannot maintain abstinence beyond 2 weeks despite consistent effort, consider a PIED support group, a licensed addiction counselor, or NoFap accountability partner system. Addiction neural circuits can require external support — this is not weakness, it is neuroscience.</div>
+  </div>
+
+  <!-- NORMAL SIGNS -->
+  <div class="card" style="margin-top:6px;border-color:rgba(0,224,150,0.2);">
+    <div class="card-title"><span class="dot green"></span>Normal / Expected Signs — Do NOT Panic</div>
+    <div class="metric-row"><div class="metric-name">Flatline (zero libido days 7–21)</div><div class="metric-value good">Normal</div></div>
+    <div class="metric-row"><div class="metric-name">Increased anxiety in first 2 weeks</div><div class="metric-value good">Normal</div></div>
+    <div class="metric-row"><div class="metric-name">Random erections (brain rewiring signal)</div><div class="metric-value good">Normal</div></div>
+    <div class="metric-row"><div class="metric-name">Emotional sensitivity / mood swings</div><div class="metric-value good">Normal</div></div>
+    <div class="metric-row"><div class="metric-name">Vivid dreams (sometimes sexual)</div><div class="metric-value good">Normal</div></div>
+    <div class="metric-row"><div class="metric-name">Erection lost once during intimacy</div><div class="metric-value good">Normal</div></div>
+    <div class="metric-row"><div class="metric-name">Strong urges in weeks 1–3</div><div class="metric-value good">Normal</div></div>
+  </div>
+
+</div><!-- /page-alerts -->
+
+<!-- CALENDAR DETAIL MODAL -->
+<div class="modal-backdrop" id="calendar-modal" aria-hidden="true">
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="calendar-detail-title">
+    <div class="modal-header">
+      <div>
+        <div class="modal-kicker">Calendar Detail</div>
+        <div class="modal-title" id="calendar-detail-title">Daily Log</div>
+      </div>
+      <button class="modal-close" type="button" onclick="closeCalendarDetail()" aria-label="Close calendar detail">✕</button>
+    </div>
+
+    <div class="modal-section">
+      <div class="field-label">PMO Status</div>
+      <div class="tracker-row compact" id="detail-pmo">
+        <button class="tracker-btn" type="button" onclick="setDetailPMO('clean')">Clean</button>
+        <button class="tracker-btn" type="button" onclick="setDetailPMO('urge')">Had Urge</button>
+        <button class="tracker-btn" type="button" onclick="setDetailPMO('relapse')">Relapse</button>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <div class="field-label">Sleep <span id="detail-sleep-val">7.0h</span></div>
+      <input type="range" min="3" max="10" step="0.5" value="7" id="detail-sleep" oninput="updateDetailMetric('sleep', this.value)">
+    </div>
+
+    <div class="modal-section">
+      <div class="field-label">Anxiety <span id="detail-anxiety-val">5</span></div>
+      <input type="range" min="0" max="10" step="1" value="5" id="detail-anxiety" oninput="updateDetailMetric('anxiety', this.value)">
+    </div>
+
+    <div class="modal-section">
+      <div class="field-label">Libido <span id="detail-libido-val">3</span></div>
+      <input type="range" min="0" max="10" step="1" value="3" id="detail-libido" oninput="updateDetailMetric('libido', this.value)">
+    </div>
+
+    <div class="modal-section">
+      <div class="field-label">Partner Confidence <span id="detail-conf-val">2</span></div>
+      <input type="range" min="0" max="10" step="1" value="2" id="detail-conf" oninput="updateDetailMetric('conf', this.value)">
+    </div>
+
+    <div class="modal-section">
+      <div class="field-label">Notes</div>
+      <textarea class="detail-notes" id="detail-notes" rows="3" placeholder="Trigger, win, or reflection..." oninput="updateDetailNotes(this.value)"></textarea>
+    </div>
+
+    <button class="utility-btn full" type="button" onclick="closeCalendarDetail()">Done</button>
+  </div>
+</div>
+
+<!-- EMERGENCY MODAL -->
+<div class="modal-backdrop" id="emergency-modal" aria-hidden="true">
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="emergency-title">
+    <div class="modal-header">
+      <div>
+        <div class="modal-kicker">Emergency Mode</div>
+        <div class="modal-title" id="emergency-title">10:00</div>
+      </div>
+      <button class="modal-close" type="button" onclick="closeEmergencyMode()" aria-label="Close emergency mode">✕</button>
+    </div>
+    <div class="emergency-copy">Do the next action. No negotiation, no scrolling, no testing yourself.</div>
+    <div class="protection-grid" id="emergency-list"></div>
+    <div class="backup-actions" style="margin-top:14px;">
+      <button class="utility-btn" type="button" onclick="completeEmergencyMode()">Complete Reset</button>
+      <button class="utility-btn secondary" type="button" onclick="closeEmergencyMode()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+
+<!-- SERVICE WORKER -->
+<script src="js/service-worker-register.js"></script>
+
+</body>
+</html>

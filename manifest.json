@@ -1,0 +1,28 @@
+{
+  "name": "ReWire - 90-Day Recovery Protocol",
+  "short_name": "ReWire",
+  "description": "90-Day sexual health recovery dashboard and daily habit tracker.",
+  "id": "/recovery-max/",
+  "start_url": "/recovery-max/index.html",
+  "scope": "/recovery-max/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
+  "background_color": "#050810",
+  "theme_color": "#080c14",
+  "categories": ["health", "productivity", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
