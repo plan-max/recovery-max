@@ -412,8 +412,11 @@ function renderWeeklyInsights() {
   if (!el) return;
 
   const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 is Sunday, 1 is Monday
+  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
   const logs = [];
-  for (let i = 6; i >= 0; i--) {
+  for (let i = daysSinceMonday; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
     const key = toDateKey(d);
